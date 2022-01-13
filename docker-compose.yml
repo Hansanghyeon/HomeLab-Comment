@@ -2,38 +2,42 @@ version: "3.8"
 
 services:
   remark:
-    image: ghcr.io/umputun/remark42:master
+    image: ghcr.io/umputun/remark42:latest
     environment:
       - REMARK_URL=https://remark.hyeon.pro
-      - SITE=hyeon.pro
+      - SITE=hyeon.pro,remark
       - SECRET=${SECRET}
       - STORE_BOLT_PATH=/srv/var/db
       - BACKUP_PATH=/srv/var/backup
       - DEBUG=true
+      # 관리자 설정
+      - ADMIN_SHARED_ID=${ADMIN_SHARED_ID}
+      # 관리자 알림
+      - NOTIFY_ADMINS=telegram
+      - ADMIN_SHARED_EMAIL=${ADMIN_SHARED_EMAIL}
+      # 사용자 알림
+      - NOTIFY_USERS=email
+      - NOTIFY_EMAIL_FROM=noreply@hyeon.pro
+      - NOTIFY_EMAIL_VERIFICATION_SUBJ="[hyeon.pro] 댓글 구독"
+      # 텔레그렘
+      - NOTIFY_TELEGRAM_CHAN=${NOTIFY_TELEGRAM_CHAN}
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      # 메일구성
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=465
+      - SMTP_TLS=true
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      # OAuth
       - AUTH_GOOGLE_CID=${AUTH_GOOGLE_CID}
       - AUTH_GOOGLE_CSEC=${AUTH_GOOGLE_CSEC}
       - AUTH_GITHUB_CID=${AUTH_GITHUB_CID}
       - AUTH_GITHUB_CSEC=${AUTH_GITHUB_CSEC}
-      - ADMIN_PASSWD=q1w2e3!@
+      # email auth
       - AUTH_EMAIL_ENABLE=true
-      - ADMIN_SHARED_EMAIL=support@hyeon.pro
-      - ADMIN_SHARED_ID=${ADMIN_SHARED_ID}
-      - AUTH_EMAIL_HOST=smtp.gmail.com
-      - AUTH_EMAIL_PORT=587
-      - AUTH_EMAIL_FROM=noreply@hyeon.pro
-      - AUTH_EMAIL_SUBJ=Remark42
+      - AUTH_EMAIL_SUBJ="[hyeon.pro] 댓글시스템 인증"
       - AUTH_EMAIL_CONTENT_TYPE=text/html
-      - AUTH_EMAIL_TLS=true
-      - AUTH_EMAIL_USER=bot.hansanghyeopn@gmail.com
-      - AUTH_EMAIL_PASSWD=${APP_PASSWORD}
-      - AUTH_EMAIL_TIMEOUT=10s
-      - NOTIFY_EMAIL_FROM=remark@hyeon.pro
-      - NOTIFY_EMAIL_ADMIN=true
-      - SMTP_HOST=smtp.gmail.com
-      - SMTP_PORT=587
-      - SMTP_TLS=true
-      - SMTP=USERNAME=bot.hansanghyeopn@gmail.com
-      - SMTP=PASSWORD=${APP_PASSWORD}
+      - AUTH_EMAIL_FROM=noreply@hyeon.pro
     volumes:
       - ./var:/srv/var
     deploy:
