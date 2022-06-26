@@ -1,8 +1,11 @@
 version: "3.8"
 
 services:
-  remark:
+  app:
     image: ghcr.io/umputun/remark42:latest
+    networks:
+      - traefik
+      - default
     environment:
       - REMARK_URL=https://remark.hyeon.pro
       - SITE=hyeon.pro,remark
@@ -40,19 +43,15 @@ services:
       - AUTH_EMAIL_FROM=noreply@hyeon.pro
     volumes:
       - ./var:/srv/var
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == ${HOSTNAME}
-      labels:
-        - traefik.enable=true
-        ## HTTP Routers
-        - traefik.http.routers.remark.entrypoints=websecure
-        - traefik.http.routers.remark.rule=Host(`remark.hyeon.pro`)
-        - traefik.http.routers.remark.tls.certresolver=leresolver
-        - traefik.http.services.remark.loadbalancer.server.port=8080
+    labels:
+      - traefik.enable=true
+      ## HTTP Routers
+      - traefik.http.routers.remark.entrypoints=websecure
+      - traefik.http.routers.remark.rule=Host(`remark.hyeon.pro`)
+      - traefik.http.routers.remark.tls.certresolver=leresolver
+      - traefik.http.services.remark.loadbalancer.server.port=8080
 
 networks:
-  default:
+  traefik:
     external:
-      name: proxy-main
+      name: traefik_proxy
